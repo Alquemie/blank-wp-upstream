@@ -62,7 +62,7 @@ function initSite {
   then
     echo "    ** FIRST RUN: Downloading WordPress Files **";
     [ -f "master.tar.gz" ] && rm master.tar.gz
-    curl $SILENT -O -L "https://github.com/Alquemie/pantheon-wp/archive/master.tar.gz"
+    curl $SILENT -O -L "https://github.com/Alquemie/pantheon/archive/master.tar.gz"
     tar $TAR master.tar.gz -C ./ --strip 1
     rm master.tar.gz
 
