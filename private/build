@@ -37,8 +37,9 @@ done
 if [ $HELP == 1 ];
 then
   echo "Usage: buildsite [OPTION]... ";
-  echo "Backup, Build and Deploy WordPress Utilizing COMMAND LINE AND WP-CLI";
+  echo "Build and Deploy WordPress Utilizing COMMAND LINE AND WP-CLI";
   echo "  -c, --clean-composer          Clear Local Composer Cache";
+  echo "  -p, --production              Optimize build for production";
   echo "  -u, --update                  Update Project Dependancies";
   echo "  -v, --verbose                 Shows additonal information during build process";
   echo "  -h, --help                    Displays USAGE information";
