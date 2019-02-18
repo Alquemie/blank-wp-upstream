@@ -12,13 +12,17 @@ CLEAN=0
 GETDEPS=0
 VERBOSE=0
 QUITE="-q"
-SILENT="-s"
+GIT_QUITE="--quiet"
 TAR="-xzf"
+LOCAL=0
 
 while [ "$1" != "" ]; do
   case $1 in
     -c | --clean-composer )
 			CLEAN=1
+			;;
+    -f | -l | --local-only )
+			LOCAL=1
 			;;
 		-u | --update-composer )
 			GETDEPS=1
@@ -33,12 +37,22 @@ while [ "$1" != "" ]; do
   shift
 done
 
+COMPOSER=$((CLEAN + GETDEPS));
+if [ $LOCAL == "1" ] && [ $COMPOSER -ge "1" ];
+then
+  echo "";
+  echo "WARNING: The 'local-only' option cannot be used with ANY 'composer' options!";
+  echo "";
+  HELP=1;
+fi
+
 # If HELP then Display Message and exit
 if [ $HELP == 1 ];
 then
   echo "Usage: buildsite [OPTION]... ";
   echo "Build and Deploy WordPress Utilizing COMMAND LINE AND WP-CLI";
   echo "  -c, --clean-composer          Clear Local Composer Cache";
+  echo "  -l, --local-only              Local Project Files Only (Quick)";
   echo "  -p, --production              Optimize build for production";
   echo "  -u, --update                  Update Project Dependancies";
   echo "  -v, --verbose                 Shows additonal information during build process";
@@ -67,6 +81,7 @@ function initSite {
     tar $TAR master.tar.gz -C ./ --strip 1
     rm master.tar.gz
 
+    LOCAL=0
     GETDEPS=1
   fi
 }
@@ -125,7 +140,10 @@ function composerInstall {
 echo "Building Site...";
 initSite;
 
-cleanBuildLocation;
+if [ $LOCAL == 0 ];
+then
+  cleanBuildLocation;
+fi
 
 if [ $CLEAN == 1 ];
 then
@@ -135,7 +153,8 @@ fi
 if [ $GETDEPS == 1 ];
 then
 	composerUpdate;
-else
+elif [ $LOCAL == 0 ];
+then
   composerInstall;
 fi
 
